@@ -1,0 +1,50 @@
+{
+  "name": "Herion",
+  "version": "1.0.0-a",
+  "description": "A discord template written in TypeScript",
+  "main": "src/startup.ts",
+  "scripts": {
+    "start": "bun src/startup",
+    "dev": "bun --watch src/startup",
+    "prisma": "prisma",
+    "p": "prisma",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "bun src/helpers/generateMigration.ts",
+    "prisma:studio": "prisma studio",
+    "prisma:format": "prisma format",
+    "prisma:g": "prisma generate",
+    "prisma:m": "bun src/helpers/generateMigration.ts",
+    "prisma:s": "prisma studio",
+    "prisma:f": "prisma format",
+    "prisma:tour": "npm run prisma:format && npm run prisma:migrate"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SamTheDevDE/Herion.git"
+  },
+  "keywords": [
+    "typescript",
+    "ts",
+    "discord",
+    "template",
+    "client",
+    "bot",
+    "easy-to-use"
+  ],
+  "author": "SamTheDevDE",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SamTheDevDE/Herion/issues"
+  },
+  "homepage": "https://github.com/SamTheDevDE/Herion#readme",
+  "dependencies": {
+    "@prisma/client": "^6.15.0",
+    "colors": "^1.4.0",
+    "discord.js": "14.22.1",
+    "typescript": "5.9.2"
+  },
+  "devDependencies": {
+    "@types/node": "24.3.0",
+    "dotenv": "^17.2.1"
+  }
+}
