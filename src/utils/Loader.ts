@@ -34,11 +34,12 @@ function getFilesRecursive(dir: string): string[] {
 }
 
 export async function loadFiles(directory: string, loadType: LoadAbles, client: ExtendedClient) {
-    const files = getFilesRecursive(directory)
+    const files = getFilesRecursive(directory);
     for (const file of files) {
         try {
-            const imported = await import(file)
-            const module = imported.default || imported
+            const imported = await import(file);
+            const module = imported.default || imported;
+            
             switch (loadType) {
                 case LoadAbles.GuildEvents:
                     if (module.name && typeof module.execute === "function") {
@@ -58,20 +59,20 @@ export async function loadFiles(directory: string, loadType: LoadAbles, client: 
                     }
                     break
                 case LoadAbles.MessageCommands:
-                    if (module.name && typeof module.execute === "function") {
-                        if (module.once) {
-                            client.once(module.name, (...args) => module.execute(...args, client))
-                        } else {
-                            client.on(module.name, (...args) => module.execute(...args, client))
-                        }
-                        client.guildEvents.set(module.name, module)
-                        log.debug(`[GuildEvent] Loaded: ${module.name}`)
+                    if (module.prototype?.execute && module.prototype?.constructor) {
+                        const command = new module();
+                        client.messageCommands.set(command.name, command);
+                        command.aliases?.forEach((alias: string) => {
+                            client.messageCommands.set(alias, command);
+                        });
+                        log.debug(`[MessageCommand] Loaded: ${command.name}`);
                     }
-                    break
+                    break;
                 case LoadAbles.SlashCommands:
                     if (module.data?.name && typeof module.execute === "function") {
-                        client.slashCommands.set(module.data.name, module)
-                        log.debug(`[SlashCommand] Loaded: ${module.data.name}`)
+                        const command = new module();
+                        client.slashCommands.set(command.data.name, command);
+                        log.debug(`[SlashCommand] Loaded: ${command.data.name}`);
                     }
                     break
                 case LoadAbles.Buttons:
