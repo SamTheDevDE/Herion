@@ -3,7 +3,7 @@ export interface BotConfig {
     prefix: string;
     ownerIds: string[];
     clientId: string;
-    guildId?: string;
+    devGuildId?: string;
     environment: "development" | "production";
     colors: {
         primary: number;

@@ -2,7 +2,7 @@ import { ActivityType, Client, Collection, GatewayIntentBits } from "discord.js"
 import Logger from "./classes/Logger";
 import Database from "./classes/Database"
 import { LoadAbles, loadFiles } from './utils/Loader';
-import * as config from "./config";
+import config from "./config";
 import { ExtendedClientOptions } from './types/client';
 import { Command } from "./structures/Command";
 import { SlashCommand } from "./structures/SlashCommand";
@@ -13,6 +13,7 @@ export class ExtendedClient extends Client implements ExtendedClientOptions {
     public guildEvents: Collection<string, EventFile> = new Collection();
     public clientEvents: Collection<string, EventFile> = new Collection();
     public slashCommands: Collection<string, SlashCommand> = new Collection();
+    public devSlashCommands: Collection<string, SlashCommand> = new Collection();
     public messageCommands: Collection<string, Command> = new Collection();
     public buttons: Collection<string, ButtonOptions> = new Collection();
     public modals: Collection<string, ModalOptions> = new Collection();
@@ -54,7 +55,6 @@ class HerionClient {
 
     constructor(tkn: string) {
         this.token = tkn;
-        // loads the config into the client
         for (const [key, value] of Object.entries(config)) {
             this.client.config.set(key, value);
         }
@@ -68,7 +68,6 @@ class HerionClient {
         await this.client.login(this.token);
         this.log.info("Discord client logged in successfully.");
         
-        // Load all commands and events
         await this.loadAll();
       } catch (err) {
         this.log.error("Failed to start client:", err);
@@ -78,18 +77,44 @@ class HerionClient {
 
     private async loadAll(): Promise<void> {
         try {
-            // Load commands
+            await loadFiles(__dirname + "/events/client", LoadAbles.ClientEvents, this.client);
+            await loadFiles(__dirname + "/events/guild", LoadAbles.GuildEvents, this.client);
+            
             await loadFiles(__dirname + "/commands/message", LoadAbles.MessageCommands, this.client);
             await loadFiles(__dirname + "/commands/slash", LoadAbles.SlashCommands, this.client);
             
-            // Load events
-            await loadFiles(__dirname + "/events/client", LoadAbles.ClientEvents, this.client);
-            await loadFiles(__dirname + "/events/guild", LoadAbles.GuildEvents, this.client);
-
             this.log.info(`Loaded ${this.client.messageCommands.size} message commands`);
             this.log.info(`Loaded ${this.client.slashCommands.size} slash commands`);
             this.log.info(`Loaded ${this.client.clientEvents.size} client events`);
             this.log.info(`Loaded ${this.client.guildEvents.size} guild events`);
+            
+            try {
+                const commands = Array.from(this.client.slashCommands.values()).map(cmd => cmd.data.toJSON());
+                const devCommands = Array.from(this.client.devSlashCommands.values()).map(cmd => cmd.data.toJSON());
+                commands.push(...devCommands)
+                let devGuildId = this.client.config.get("devGuildId") as string || undefined;
+                if (commands.length === 0) {
+                    this.log.debug('No slash commands to register.');
+                    return
+                }
+                if (devGuildId) {
+                    this.log.info(`Registering slash commands in the dev guild`)
+                    const guild = this.client.guilds.cache.get(devGuildId);
+                    if (guild) {
+                        await guild.commands.set(commands);
+                        this.log.info(`Registered ${commands.length} slash commands to guild ${devGuildId}`);
+                    } else {
+                        await this.client.application?.commands.set(commands);
+                        this.log.info(`Dev guild ${devGuildId} not cached; registered ${commands.length} commands globally`);
+                    }
+                } else {
+                    this.log.info(`Registering slash commands globally...`)
+                    await this.client.application?.commands.set(commands);
+                    this.log.info(`Registered ${commands.length} slash commands globally`);
+                }
+            } catch (err) {
+                this.log.error("Error registering slash commands:", err);
+            }
         } catch (error) {
             this.log.error("Error loading files:", error);
         }

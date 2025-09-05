@@ -50,12 +50,12 @@ export async function loadFiles(directory: string, loadType: LoadAbles, client: 
                 case LoadAbles.ClientEvents:
                     if (module.name && typeof module.execute === "function") {
                         if (module.once) {
-                            client.once(module.name, (...args) => module.execute(...args, client))
+                            client.once(module.name, (...args) => module.execute(...args, client));
                         } else {
-                            client.on(module.name, (...args) => module.execute(...args, client))
+                            client.on(module.name, (...args) => module.execute(...args, client));
                         }
-                        client.clientEvents.set(module.name, module)
-                        log.debug(`[ClientEvent] Loaded: ${module.name}`)
+                        client.clientEvents.set(module.name, module);
+                        log.debug(`[ClientEvent] Loaded: ${module.name}`);
                     }
                     break
                 case LoadAbles.MessageCommands:
@@ -69,10 +69,23 @@ export async function loadFiles(directory: string, loadType: LoadAbles, client: 
                     }
                     break;
                 case LoadAbles.SlashCommands:
-                    if (module.data?.name && typeof module.execute === "function") {
-                        const command = new module();
-                        client.slashCommands.set(command.data.name, command);
-                        log.debug(`[SlashCommand] Loaded: ${command.data.name}`);
+                    if (module.prototype?.execute && module.prototype?.constructor) {
+                        try {
+                            const command = new module();
+                            if (!command.data?.name) {
+                                log.error(`[SlashCommand] Missing data or name property in ${file}`);
+                                break;
+                            }
+                            if (command.data?.ownerOnly == true) {
+                                client.devSlashCommands.set(command.data.name, command);
+                                log.debug(`[DevSlashCommand] Loaded: ${command.data.name}`);
+                            } else {
+                                client.slashCommands.set(command.data.name, command);
+                                log.debug(`[SlashCommand] Loaded: ${command.data.name}`);
+                            }
+                        } catch (error) {
+                            log.error(`[SlashCommand] Failed to load ${file}:`, error);
+                        }
                     }
                     break
                 case LoadAbles.Buttons:

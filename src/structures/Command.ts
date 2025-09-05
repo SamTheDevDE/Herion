@@ -1,4 +1,3 @@
-import { Message } from "discord.js";
 import { CommandExecuteOptions, CommandOptions, CommandStructure } from "../types/command";
 
 export class Command implements CommandStructure {

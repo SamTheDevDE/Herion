@@ -17,13 +17,15 @@ export default {
 
         if (!command) return;
 
-        // Check for owner-only commands
         if (command.ownerOnly && !config.ownerIds.includes(message.author.id)) {
             return message.reply('This command can only be used by the bot owner!');
         }
 
         try {
-            await command.execute({ message, args });
+            await command.execute({
+                message, args,
+                client: new ExtendedClient
+            });
         } catch (error) {
             console.error(error);
             message.reply('There was an error executing that command!');

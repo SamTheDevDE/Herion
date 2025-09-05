@@ -3,9 +3,9 @@ import { BotConfig } from "./types/config";
 const config: BotConfig = {
     token: process.env.TOKEN,
     clientId: process.env.CLIENT_ID,
-    guildId: process.env.GUILD_ID,
+    devGuildId: "1413558885352210493",
     prefix: ";",
-    ownerIds: ["YOUR_ID_HERE", "ANOTHER_ID_HERE"],
+    ownerIds: ["792037342771675187"],
     environment: process.env.NODE_ENV || "development",
     colors: {
         primary: 0x3498db,
@@ -14,9 +14,9 @@ const config: BotConfig = {
         warning: 0xf1c40f
     },
     log_webhooks: {
-        error: "",
-        info: "",
-        debug: ""
+        error: "https://discord.com/api/webhooks/1413561290210676776/c4BN4wnL0FoXkPrSzadJ_gmfqFLSiRN_TInJM32uMltH6JgFs7x2FAWbKB24JuBSL7M3",
+        info: "https://discord.com/api/webhooks/1413561290210676776/c4BN4wnL0FoXkPrSzadJ_gmfqFLSiRN_TInJM32uMltH6JgFs7x2FAWbKB24JuBSL7M3",
+        debug: "https://discord.com/api/webhooks/1413561290210676776/c4BN4wnL0FoXkPrSzadJ_gmfqFLSiRN_TInJM32uMltH6JgFs7x2FAWbKB24JuBSL7M3"
     }
 };
 

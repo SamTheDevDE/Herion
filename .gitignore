@@ -1,6 +1,9 @@
 node_modules/
 package-lock.json
-.env
 bun.lock
 *.sql
 migration_lock.toml
+
+# Remove Config Files
+.env
+config.ts
