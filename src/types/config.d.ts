@@ -21,9 +21,9 @@ export interface BotConfig {
 declare global {
     namespace NodeJS {
         interface ProcessEnv {
-            TOKEN: string;
-            CLIENT_ID: string;
-            GUILD_ID?: string;
+            BOT_TOKEN: string;
+            DEBUG: boolean;
+            DATABASE_URL: string;
             NODE_ENV: "development" | "production";
         }
     }

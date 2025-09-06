@@ -57,8 +57,10 @@ class Logger {
     }
     // public function for outputting debug information (will only show if the environment variable "DEBUG" is true)
     public debug(message: string, ...args: any[]): void {
-        if (process.env.DEBUG) {
+        if (process.env.DEBUG == true) {
             console.debug(this.colorize(LogLevel.DEBUG, this.formatMessage(LogLevel.DEBUG, message, ...args)));
+        } else {
+            return;
         }
     }
     // public function for outputting custom information which is neither info, error or debug 
