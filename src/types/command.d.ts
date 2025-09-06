@@ -9,8 +9,17 @@ export interface CommandOptions {
     ownerOnly?: boolean;
     cooldown?: number;
     permissions?: {
-        user?: string[];
-        bot?: string[];
+        user?: PermissionResolvable[];
+        bot?: PermissionResolvable[];
+    };
+    args?: {
+        required: boolean,
+        argList?: string[]
+    };
+    guildOnly?: {
+        enabled: boolean,
+        whitelist?: string[],
+        blacklist?: string[]
     };
 }
 
@@ -32,8 +41,8 @@ export interface SlashCommandOptions {
     ownerOnly?: boolean;
     cooldown?: number;
     permissions?: {
-        user?: string[];
-        bot?: string[];
+        user?: PermissionResolvable[];
+        bot?: PermissionResolvable[];
     };
 }
 

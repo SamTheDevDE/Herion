@@ -3,6 +3,7 @@ package-lock.json
 bun.lock
 *.sql
 migration_lock.toml
+.vscode/
 
 # Remove Config Files
 .env

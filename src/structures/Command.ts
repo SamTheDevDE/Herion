@@ -1,3 +1,4 @@
+import { PermissionResolvable } from "discord.js";
 import { CommandExecuteOptions, CommandOptions, CommandStructure } from "../types/command";
 
 export class Command implements CommandStructure {
@@ -8,8 +9,17 @@ export class Command implements CommandStructure {
     public ownerOnly: boolean;
     public cooldown: number;
     public permissions: {
-        user: string[];
-        bot: string[];
+        user: PermissionResolvable[];
+        bot: PermissionResolvable[];
+    };
+    public args?: {
+        required: boolean;
+        argList?: string[];
+    };
+    public guildOnly?: {
+        enabled: boolean;
+        whitelist?: string[];
+        blacklist?: string[];
     };
 
     constructor(options: CommandOptions) {
@@ -23,6 +33,19 @@ export class Command implements CommandStructure {
             user: options.permissions?.user || [],
             bot: options.permissions?.bot || []
         };
+        this.args = options.args
+            ? {
+                required: options.args.required,
+                argList: options.args.argList || []
+            }
+            : undefined;
+        this.guildOnly = options.guildOnly
+            ? {
+                enabled: options.guildOnly.enabled,
+                whitelist: options.guildOnly.whitelist || [],
+                blacklist: options.guildOnly.blacklist || []
+            }
+            : undefined;
     }
 
     async execute(options: CommandExecuteOptions): Promise<any> {

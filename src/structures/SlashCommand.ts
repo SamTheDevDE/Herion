@@ -1,5 +1,6 @@
 import { SlashCommandBuilder } from "discord.js";
 import { SlashCommandExecuteOptions, SlashCommandStructure } from "../types/command";
+import { PermissionResolvable } from "discord.js";
 
 export class ExtendedSlashCommandBuilder extends SlashCommandBuilder {
     ownerOnly?: boolean;
@@ -7,8 +8,8 @@ export class ExtendedSlashCommandBuilder extends SlashCommandBuilder {
     category?: string;
     cooldown?: number;
     permissions?: {
-        user?: string[];
-        bot?: string[];
+        user?: PermissionResolvable[];
+        bot?: PermissionResolvable[];
     };
 
     setOwnerOnly(ownerOnly: boolean) {
@@ -31,7 +32,7 @@ export class ExtendedSlashCommandBuilder extends SlashCommandBuilder {
         return this;
     }
 
-    setPermissions(permissions: { user?: string[]; bot?: string[] }) {
+    setPermissions(permissions: { user?: PermissionResolvable[]; bot?: PermissionResolvable[] }) {
         this.permissions = permissions;
         return this;
     }
@@ -45,8 +46,8 @@ export class SlashCommand implements SlashCommandStructure{
     public ownerOnly: Boolean;
     public cooldown: Number;
     public permissions: {
-        user: string[];
-        bot: string[];
+        user: PermissionResolvable[];
+        bot: PermissionResolvable[];
     };
     public data: SlashCommandBuilder;
 
@@ -70,8 +71,8 @@ export class SlashCommand implements SlashCommandStructure{
         this.ownerOnly = options.ownerOnly || false;
         this.cooldown = options.cooldown || 3;
         this.permissions = {
-            user: options.permissions?.user || [],
-            bot: options.permissions?.bot || []
+            user: (options.permissions?.user as PermissionResolvable[]) || [],
+            bot: (options.permissions?.bot as PermissionResolvable[]) || []
         };
         this.data = data;
     }

@@ -6,7 +6,10 @@ export default class PingCommand extends Command {
         super({
             name: 'ping',
             description: 'Shows the bot latency',
-            aliases: ['pong']
+            aliases: ['pong'],
+            cooldown: 2,
+            args: { required: false },
+            guildOnly: { enabled: false }
         });
     }
 

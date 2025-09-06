@@ -16,6 +16,7 @@ export class ExtendedClient extends Client implements ExtendedClientOptions {
     public slashCommands: Collection<string, SlashCommand> = new Collection();
     public devSlashCommands: Collection<string, SlashCommand> = new Collection();
     public messageCommands: Collection<string, Command> = new Collection();
+    public cooldowns: Collection<string, Collection<string, number>> = new Collection();
     public buttons: Collection<string, ButtonOptions> = new Collection();
     public modals: Collection<string, ModalOptions> = new Collection();
     public selectMenus: Collection<string, SelectMenuOptions> = new Collection();
