@@ -11,6 +11,7 @@ class Database {
     }
 
     initialize() {
+        // checks if there is already an instance of "database" if not make one
         if (!Database._instance) {
             try {
                 Database._instance = new PrismaClient();
@@ -25,6 +26,7 @@ class Database {
     }
 
     getClient() {
+        // returns the database client
         return Database._instance;
     }
 }

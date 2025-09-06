@@ -12,6 +12,7 @@ export default class InviteCommand extends Command {
 
     async execute(options: CommandExecuteOptions): Promise<any> {
         const message = options.message;
+        // replies with the install link
         message.reply(`https://discord.com/oauth2/authorize?client_id=${message.client.user.id}`)
     }
 }

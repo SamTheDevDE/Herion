@@ -5,6 +5,7 @@ import { ExtendedClient } from "../client";
 
 const log = Logger.getInstance();
 
+// types of files to load
 export enum LoadAbles {
     GuildEvents,
     ClientEvents,
@@ -18,6 +19,7 @@ export enum LoadAbles {
     SelectMenus
 }
 
+// a function to get every file from a folder
 function getFilesRecursive(dir: string): string[] {
     let results: string[] = []
     const list = readdirSync(dir)
@@ -33,9 +35,11 @@ function getFilesRecursive(dir: string): string[] {
     return results
 }
 
+// a function to load every file using the directory the load type (aka type of file) and the bot client
 export async function loadFiles(directory: string, loadType: LoadAbles, client: ExtendedClient) {
     const files = getFilesRecursive(directory);
     for (const file of files) {
+        // loops thru every file in the list "files"
         try {
             const imported = await import(file);
             const module = imported.default || imported;

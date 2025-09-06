@@ -12,6 +12,7 @@ export default class InviteSlashCommand extends SlashCommand {
 
     async execute(options: SlashCommandExecuteOptions): Promise<any> {
         const interaction = options.interaction;
+        // replies with the install link
         interaction.reply({ content: `https://discord.com/oauth2/authorize?client_id=${interaction.client.user.id}`, flags: 64 })
     }
 }
