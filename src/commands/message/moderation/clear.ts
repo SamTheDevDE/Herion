@@ -19,8 +19,8 @@ export default class InviteCommand extends Command {
             },
             guildOnly: { 
                 enabled: true,
-                whitelist: [""],
-                blacklist: [""]
+                whitelist: [],
+                blacklist: []
             }
         });
     }

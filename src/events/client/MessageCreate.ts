@@ -106,7 +106,7 @@ export default {
             await command.execute({
                 message,
                 args,
-                client: new ExtendedClient
+                client
             });
         } catch (error) {
             log.error(error as string);
