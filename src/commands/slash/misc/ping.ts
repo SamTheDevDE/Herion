@@ -7,7 +7,6 @@ export default class PingSlashCommand extends SlashCommand {
         const data = new ExtendedSlashCommandBuilder()
             .setName('ping')
             .setDescription('Shows the bot latency');
-            
         super(data);
     }
 

@@ -7,6 +7,7 @@ export default class InviteCommand extends Command {
         super({
             name: 'invite',
             description: 'Gets you the invite of the bot.',
+            aliases: ["install"],
         });
     }
 

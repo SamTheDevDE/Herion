@@ -7,4 +7,4 @@ migration_lock.toml
 
 # Remove Config Files
 .env
-config.ts
+src/config.ts

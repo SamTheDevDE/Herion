@@ -1,8 +1,8 @@
 import { BotConfig } from "./types/config";
 
 const config: BotConfig = {
-    token: process.env.TOKEN,
-    clientId: process.env.CLIENT_ID,
+    token: process.env.TOKEN as string,
+    clientId: process.env.CLIENT_ID as string,
     devGuildId: "1413558885352210493",
     prefix: ";",
     ownerIds: ["792037342771675187"],

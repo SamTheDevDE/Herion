@@ -4,7 +4,6 @@ import { PermissionResolvable } from "discord.js";
 
 export class ExtendedSlashCommandBuilder extends SlashCommandBuilder {
     ownerOnly?: boolean;
-    aliases?: string[];
     category?: string;
     cooldown?: number;
     permissions?: {
@@ -14,11 +13,6 @@ export class ExtendedSlashCommandBuilder extends SlashCommandBuilder {
 
     setOwnerOnly(ownerOnly: boolean) {
         this.ownerOnly = ownerOnly;
-        return this;
-    }
-
-    setAliases(aliases: string[]) {
-        this.aliases = aliases;
         return this;
     }
 
@@ -41,7 +35,6 @@ export class ExtendedSlashCommandBuilder extends SlashCommandBuilder {
 export class SlashCommand implements SlashCommandStructure{
     public name: String;
     public description: String;
-    public aliases: String[];
     public category: String;
     public ownerOnly: Boolean;
     public cooldown: Number;
@@ -66,7 +59,6 @@ export class SlashCommand implements SlashCommandStructure{
     ) {
         this.name = data.name;
         this.description = data.description;
-        this.aliases = options.aliases || [];
         this.category = options.category || 'Miscellaneous';
         this.ownerOnly = options.ownerOnly || false;
         this.cooldown = options.cooldown || 3;

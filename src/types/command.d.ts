@@ -36,7 +36,6 @@ export interface CommandStructure {
 export interface SlashCommandOptions {
     name: string;
     description: string;
-    aliases?: string[];
     category?: string;
     ownerOnly?: boolean;
     cooldown?: number;

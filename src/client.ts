@@ -113,12 +113,12 @@ class HerionClient {
                         return;
                     }
                     this.log.info(`Registering slash commands in the dev guild (${devGuildId})`);
-                    // register both normal and dev commands to the dev guild
-                    const allDevCommands = [...commands, ...devCommands];
                     try {
+                        // find the developer guild and try to set the slash commands there 
+                        // (if the guild doesn't exist or isn't cached or the bot isn't in the guild then panic)
                         const guild = await this.client.guilds.fetch(devGuildId);
-                        await guild.commands.set(allDevCommands);
-                        this.log.info(`Registered ${allDevCommands.length} slash commands to guild ${devGuildId}`);
+                        await guild.commands.set(devCommands);
+                        this.log.info(`Registered ${devCommands.length} slash commands to guild ${devGuildId}`);
                     } catch (err) {
                         this.log.error(`Failed to register commands to dev guild ${devGuildId}:`, err);
                     }
