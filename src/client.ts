@@ -7,7 +7,7 @@ import { ExtendedClientOptions } from './types/client';
 import { Command } from "./structures/Command";
 import { SlashCommand } from "./structures/SlashCommand";
 import { EventFile } from "./types/event";
-import { ButtonOptions, ModalOptions, SelectMenuOptions, AutocompleteOptions } from "./types/interaction";
+import { ButtonOptions, ModalOptions, SelectMenuOptions, AutocompleteOptions, MessageContextOptions, UserContextOptions } from "./types/interaction";
 
 export class ExtendedClient extends Client implements ExtendedClientOptions {
     // some public variables
@@ -21,6 +21,8 @@ export class ExtendedClient extends Client implements ExtendedClientOptions {
     public modals: Collection<string, ModalOptions> = new Collection();
     public selectMenus: Collection<string, SelectMenuOptions> = new Collection();
     public autoCompletes: Collection<string, AutocompleteOptions> = new Collection();
+    public messageContexts: Collection<string, MessageContextOptions> = new Collection();
+    public userContexts: Collection<string, UserContextOptions> = new Collection();
     public config: Collection<string, any> = new Collection();
 
     // change this in order to change the presence, allowedMentions, intents and the shard amount
@@ -89,11 +91,22 @@ class HerionClient {
             // loads the commands
             await loadFiles(__dirname + "/commands/message", LoadAbles.MessageCommands, this.client);
             await loadFiles(__dirname + "/commands/slash", LoadAbles.SlashCommands, this.client);
+            // loads interactions
+            await loadFiles(__dirname + "/interactions/buttons", LoadAbles.Buttons, this.client);
+            await loadFiles(__dirname + "/interactions/modals", LoadAbles.Modals, this.client);
+            await loadFiles(__dirname + "/interactions/select-menus", LoadAbles.SelectMenus, this.client);
+            await loadFiles(__dirname + "/interactions/autocomplete", LoadAbles.AutoCompletes, this.client);
+            await loadFiles(__dirname + "/interactions/context/message", LoadAbles.MessageInteractions, this.client);
+            await loadFiles(__dirname + "/interactions/context/user", LoadAbles.UserInteractions, this.client);
             // stats
             this.log.info(`Loaded ${this.client.messageCommands.size} message commands`);
             this.log.info(`Loaded ${this.client.slashCommands.size} slash commands`);
             this.log.info(`Loaded ${this.client.clientEvents.size} client events`);
             this.log.info(`Loaded ${this.client.guildEvents.size} guild events`);
+            this.log.info(`Loaded ${this.client.buttons.size} buttons`);
+            this.log.info(`Loaded ${this.client.modals.size} modals`);
+            this.log.info(`Loaded ${this.client.selectMenus.size} select menus`);
+            this.log.info(`Loaded ${this.client.autoCompletes.size} autocompletes`);
             
             try {
                 // gets both normal slash commands and developer slash commands

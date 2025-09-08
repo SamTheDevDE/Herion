@@ -106,11 +106,13 @@ export async function loadFiles(directory: string, loadType: LoadAbles, client: 
                     break
                 case LoadAbles.MessageInteractions:
                     if (module.name && typeof module.execute === "function") {
+                        client.messageContexts.set(module.name, module)
                         log.debug(`[MessageInteraction] Loaded: ${module.name}`)
                     }
                     break
                 case LoadAbles.UserInteractions:
                     if (module.name && typeof module.execute === "function") {
+                        client.userContexts.set(module.name, module)
                         log.debug(`[UserInteraction] Loaded: ${module.name}`)
                     }
                     break
