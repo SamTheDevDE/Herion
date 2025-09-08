@@ -3,8 +3,8 @@ import { SelectMenuOptions } from "../../types/interaction";
 
 const handler: SelectMenuOptions = {
   customId: "example_select",
-  async execute(interaction: StringSelectMenuInteraction) {
-    await interaction.reply({ content: `You chose: ${interaction.values.join(", ")}`, ephemeral: true });
+  async execute(interaction: StringSelectMenuInteraction, args: string[]) {
+    await interaction.reply({ content: `You chose: ${interaction.values.join(", ")}. Args: ${args.join(", ")}`, ephemeral: true });
   }
 };
 
