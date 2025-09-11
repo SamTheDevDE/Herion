@@ -7,6 +7,7 @@ export default class InviteCommand extends Command {
         super({
             name: 'clear',
             description: 'clears a certain amount of messages in the current channel.',
+            category: "moderation",
             permissions: {
                 user: ["ManageMessages"],
                 bot: ["ManageMessages"]

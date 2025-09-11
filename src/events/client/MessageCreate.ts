@@ -35,12 +35,12 @@ export default {
             }
             if (command.guildOnly.whitelist && command.guildOnly.whitelist.length > 0) {
                 if (!command.guildOnly.whitelist.includes(message.guild?.id ?? "")) {
-                    return message.reply("This command cannot be used in this server.");
+                    return;
                 }
             }
             if (command.guildOnly.blacklist && command.guildOnly.blacklist.length > 0) {
                 if (command.guildOnly.blacklist.includes(message.guild?.id ?? "")) {
-                    return message.reply("This command cannot be used in this server.");
+                    return;
                 }
             }
         }

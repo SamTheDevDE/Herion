@@ -8,6 +8,8 @@ export default class InviteCommand extends Command {
             name: 'invite',
             description: 'Gets you the invite of the bot.',
             aliases: ["install"],
+            category: "miscellaneous",
+            cooldown: 3
         });
     }
 
