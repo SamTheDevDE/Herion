@@ -8,4 +8,4 @@ migration_lock.toml
 
 # Remove sensitive
 .env
-src/config.ts
+config.ts
