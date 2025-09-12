@@ -8,7 +8,7 @@ const config: BotConfig = {
     ownerId: "792037342771675187",
     environment: process.env.NODE_ENV || "development",
     colors: {
-        primary: 0x3498db,
+        primary: 0x1f8b4c,
         success: 0x2ecc71,
         error: 0xe74c3c,
         warning: 0xf1c40f

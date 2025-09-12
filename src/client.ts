@@ -39,13 +39,6 @@ export class ExtendedClient extends Client implements ExtendedClientOptions {
                 repliedUser: true,
                 parse: ["users"]
             },
-            presence: {
-                status: 'dnd',
-                activities: [{
-                    name: 'your members',
-                    type: ActivityType.Watching
-                }]
-            }
         });
     }
 }
