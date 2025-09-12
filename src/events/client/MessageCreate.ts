@@ -2,12 +2,15 @@ import { ChannelType, Collection, Events, Message } from "discord.js";
 import config from "../../config";
 import { ExtendedClient } from "../../client";
 import Logger from "../../classes/Logger";
+import Database from "../../classes/Database";
 
 const log = Logger.getInstance();
 
 export default {
     name: Events.MessageCreate,
     async execute(message: Message, client: ExtendedClient) {
+        const database = new Database(log);
+        const db = database.getClient();
         // Ignore messages from bots
         if (message.author.bot) return;
 
@@ -18,14 +21,32 @@ export default {
         const args = message.content.slice(config.prefix.length).trim().split(/ +/);
         const commandName = args.shift()?.toLowerCase();
         if (!commandName) return;
+        // searches for the user in the database and returns the vars: "isBlacklisted" and "roles"
+        const user = await db?.user.findUnique({
+            where: {
+                id: message.author.id
+            },
+            select: {
+                isBlacklisted: true,
+                roles: true
+            }
+        })
 
+        // create user in the database if not found
+        if (!user) {
+            await db?.user.create({
+                data: {
+                    id: message.author.id,
+                    username: message.author.username
+                }
+            });
+        }
         // Find the command by name
         const command = client.messageCommands.get(commandName);
         if (!command) return;
-
         // Owner only check
-        if (command.ownerOnly && !config.ownerIds.includes(message.author.id)) {
-            return message.reply('This command can only be used by the bot owner!');
+        if (command.ownerOnly && !(config.ownerId.includes(message.author.id) || user?.roles.includes("DEVELOPER"))) {
+            return message.reply({ content: "You do not have permission to use this command." });
         }
 
         // Guild only checks
@@ -43,6 +64,11 @@ export default {
                     return;
                 }
             }
+        }
+
+        // User blacklist check
+        if (user?.isBlacklisted) {
+            return message.reply({ content: "You are blacklisted from the bot.", allowedMentions: { repliedUser: false }})
         }
 
         // Cooldown handling

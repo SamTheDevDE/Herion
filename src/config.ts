@@ -5,7 +5,7 @@ const config: BotConfig = {
     clientId: process.env.CLIENT_ID as string,
     devGuildId: "1413558885352210493",
     prefix: ";",
-    ownerIds: ["792037342771675187"],
+    ownerId: "792037342771675187",
     environment: process.env.NODE_ENV || "development",
     colors: {
         primary: 0x3498db,

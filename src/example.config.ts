@@ -1,11 +1,11 @@
 import { BotConfig } from "./types/config";
 
 const config: BotConfig = {
-    token: process.env.TOKEN,
-    clientId: process.env.CLIENT_ID,
-    devGuildId: process.env.GUILD_ID,
+    token: process.env.TOKEN as string,
+    clientId: process.env.CLIENT_ID as string,
+    devGuildId: process.env.GUILD_ID as string,
     prefix: ";",
-    ownerIds: ["YOUR_ID_HERE", "ANOTHER_ID_HERE"],
+    ownerId: "YOUR_ID_HERE",
     environment: process.env.NODE_ENV || "development",
     colors: {
         primary: 0x3498db,

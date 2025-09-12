@@ -4,7 +4,8 @@ bun.lock
 *.sql
 migration_lock.toml
 .vscode/
+.turbo/
 
-# Remove Config Files
+# Remove sensitive
 .env
 src/config.ts

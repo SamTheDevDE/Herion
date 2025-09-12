@@ -1,7 +1,7 @@
 export interface BotConfig {
     token: string;
     prefix: string;
-    ownerIds: string[];
+    ownerId: string;
     clientId: string;
     devGuildId?: string;
     environment: "development" | "production";

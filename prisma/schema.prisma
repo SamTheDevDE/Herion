@@ -10,12 +10,27 @@ datasource db {
 model User {
   id            String      @id
   username      String
-  roles         usr_roles[]
+  roles         usr_roles[] @default([USER])
   isBlacklisted Boolean     @default(false)
+
+  //relations
+  memberOf    Guilds[] @relation("GuildMembers")
+  ownedGuilds Guilds[] @relation("GuildOwner")
+}
+
+model Guilds {
+  id      String @id
+  name    String
+  //premium Boolean @default(false)
+  ownerId String
+
+  //relations
+  member User[] @relation("GuildMembers")
+  Owner  User   @relation("GuildOwner", fields: [ownerId], references: [id])
 }
 
 enum usr_roles {
-  OWNER
   DEVELOPER
+  //VIP
   USER
 }
