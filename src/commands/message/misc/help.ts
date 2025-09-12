@@ -76,7 +76,9 @@ export default class HelpCommand extends Command {
             });
             embeds.push(embed);
         }
-        const paginator = new Paginator(embeds, message);
-        return paginator.start();
+    // Pass category names to paginator for string select menu
+    const categoryNames = allCats.map(([cat]) => cat);
+    const paginator = new Paginator(embeds, message, categoryNames);
+    return paginator.start();
     }
 }

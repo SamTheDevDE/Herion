@@ -1,3 +1,4 @@
+import { ButtonBuilder, ButtonStyle, Colors, ContainerBuilder, MessageFlags } from 'discord.js';
 import { Command } from "../../../structures/Command";
 import { CommandExecuteOptions } from "../../../types/command";
 
@@ -16,10 +17,32 @@ export default class PingCommand extends Command {
 
     async execute(options: CommandExecuteOptions): Promise<any> {
         const message = options.message;
-        // sends a probe message which is used to calculate the latency
+        // Use Date.now() for more accurate latency measurement
+        const start = Date.now();
         const sent = await message.reply('Pinging...');
-        const latency = sent.createdTimestamp - message.createdTimestamp;
-        // sends a finishing message showing the latency and api latency (which is the same but we don't talk abt it)
-        await sent.edit(`Pong! 🏓\nLatency: ${latency}ms\nAPI Latency: ${message.client.ws.ping}ms`);
+        const latency = Date.now() - start;
+
+        const refreshBtn = new ButtonBuilder()
+            .setCustomId("ping_refresh_btn")
+            .setEmoji("🔄")
+            .setStyle(ButtonStyle.Secondary)
+            .setLabel("Refresh")
+
+        let wsPing = message.client.ws.ping;
+        const wsPingDisplay = wsPing === -1 ? 'N/A' : `**${wsPing}ms**`;
+        const pingContainer = new ContainerBuilder()
+            .addTextDisplayComponents(td => td.setContent(
+                `🏓 **Pong!**\n` +
+                `Message Latency: **${latency}ms**\n` +
+                `WebSocket Ping: ${wsPingDisplay}`
+            ))
+            .addActionRowComponents(ar => ar.addComponents(refreshBtn))
+            .setAccentColor(Colors.DarkGreen);
+
+        await sent.edit({
+            content: '',
+            components: [pingContainer],
+            flags: MessageFlags.IsComponentsV2
+        });
     }
 }
