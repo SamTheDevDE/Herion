@@ -1,5 +1,3 @@
-
-
 import { ActivityType, Events } from "discord.js";
 import { ExtendedClient } from "../../client";
 import Logger from "../../classes/Logger";
