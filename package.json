@@ -6,6 +6,8 @@
   "scripts": {
     "start": "bun src/startup",
     "dev": "bun --watch src/startup",
+    "dev:all": "turbo run dev prisma:s",
+    "start:all": "turbo run start",
     "prisma": "prisma",
     "p": "prisma",
     "prisma:generate": "prisma generate",
@@ -38,13 +40,16 @@
   },
   "homepage": "https://github.com/SamTheDevDE/Herion#readme",
   "dependencies": {
-    "@prisma/client": "^6.15.0",
+    "@prisma/client": "^6.16.1",
     "colors": "^1.4.0",
+    "concurrently": "^9.2.1",
+    "dateformat": "^5.0.3",
     "discord.js": "14.22.1",
     "typescript": "5.9.2"
   },
   "devDependencies": {
     "@types/node": "24.3.0",
     "dotenv": "^17.2.1"
-  }
+  },
+  "packageManager": "bun@1.1.13"
 }

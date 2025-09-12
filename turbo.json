@@ -1,0 +1,20 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "tui",
+  "tasks": {
+    "dev": {
+        "cache": false,
+        "outputs": [],
+        "persistent": true
+    },
+    "prisma:s": {
+        "cache": false,
+        "outputs": [],
+        "persistent": true
+    },
+    "start": {
+        "cache": false,
+        "outputs": []
+    }
+  }
+}
