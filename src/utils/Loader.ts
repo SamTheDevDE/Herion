@@ -16,7 +16,8 @@ export enum LoadAbles {
     MessageInteractions,
     UserInteractions,
     AutoCompletes,
-    SelectMenus
+    SelectMenus,
+    MessageTriggers
 }
 
 // a function to get every file from a folder
@@ -126,6 +127,16 @@ export async function loadFiles(directory: string, loadType: LoadAbles, client: 
                     if (module.customId && typeof module.execute === "function") {
                         client.selectMenus.set(module.customId, module)
                         log.debug(`[SelectMenu] Loaded: ${module.customId}`)
+                    }
+                    break
+                case LoadAbles.MessageTriggers:
+                    if (Array.isArray(module.key) && typeof module.execute === "function") {
+                        for (const trigger of module.key) {
+                            if (typeof trigger === "string") {
+                                client.messageTriggers.set(trigger.toLowerCase(), module);
+                                log.debug(`[MessageTrigger] Loaded: ${trigger}`);
+                            }
+                        }
                     }
                     break
                 default:

@@ -11,7 +11,7 @@ export default class EvalCommand extends Command {
             ownerOnly: true,
             category: "developer",
             args: { required: true },
-            guildOnly: { 
+            guildOnly: {
                 enabled: true,
                 whitelist: ["1413558885352210493"]
             }
