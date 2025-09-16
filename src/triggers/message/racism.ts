@@ -4,6 +4,7 @@ import { MessageTriggerFile } from "../../types/trigger";
 
 const trigger: MessageTriggerFile = {
   key: ["racism", "racist"],
+  caseSensitive: true,
   async execute(message: Message, _client: ExtendedClient) {
     const btn1 = new ButtonBuilder()
       .setCustomId("trigger_btn_1")

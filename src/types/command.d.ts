@@ -7,6 +7,7 @@ export interface CommandOptions {
     aliases?: string[];
     category?: string;
     ownerOnly?: boolean;
+    enabled?: boolean;
     cooldown?: number;
     permissions?: {
         user?: PermissionResolvable[];

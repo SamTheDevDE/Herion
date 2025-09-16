@@ -2,7 +2,8 @@ import { Message } from "discord.js";
 import { ExtendedClient } from "../client";
 
 export interface MessageTriggerOptions {
-    key: string[]; // trigger text, matched case-insensitively and exactly
+    key: string[];
+    caseSensitive: boolean;
 }
 
 export interface MessageTriggerStructure {

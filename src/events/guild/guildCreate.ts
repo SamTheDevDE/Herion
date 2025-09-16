@@ -1,4 +1,4 @@
-import { ActivityType, Events, Guild } from "discord.js";
+import { Events, Guild } from "discord.js";
 import { ExtendedClient } from "../../client";
 import Logger from "../../classes/Logger";
 import Database from "../../classes/Database";

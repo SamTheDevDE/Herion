@@ -1,4 +1,4 @@
-import { ActivityType, Client, Collection, GatewayIntentBits } from "discord.js";
+import { Client, Collection, GatewayIntentBits } from "discord.js";
 import Logger from "./classes/Logger";
 import Database from "./classes/Database"
 import { LoadAbles, loadFiles } from './utils/Loader';

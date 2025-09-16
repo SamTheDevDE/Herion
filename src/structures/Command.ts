@@ -7,6 +7,7 @@ export class Command implements CommandStructure {
     public aliases: string[];
     public category: string;
     public ownerOnly: boolean;
+    public enabled: boolean;
     public cooldown: number;
     public permissions: {
         user: PermissionResolvable[];
@@ -27,6 +28,7 @@ export class Command implements CommandStructure {
         this.description = options.description;
         this.aliases = options.aliases || [];
         this.category = options.category || 'Miscellaneous';
+        this.enabled = options.enabled || true;
         this.ownerOnly = options.ownerOnly || false;
         this.cooldown = options.cooldown || 3;
         this.permissions = {

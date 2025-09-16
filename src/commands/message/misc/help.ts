@@ -1,7 +1,7 @@
 import { Command } from "../../../structures/Command";
 import { CommandExecuteOptions } from "../../../types/command";
 import config from "../../../config";
-import { Message, EmbedBuilder } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 import { Paginator } from "../../../utils/Paginator";
 
 export default class HelpCommand extends Command {

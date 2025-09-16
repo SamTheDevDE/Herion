@@ -1,7 +1,6 @@
 import { Command } from "../../../structures/Command";
 import { CommandExecuteOptions } from "../../../types/command";
 import { inspect } from "util";
-import { readdirSync } from 'fs';
 
 export default class EvalCommand extends Command {
     constructor() {
