@@ -4,7 +4,8 @@ import {
     StringSelectMenuInteraction,
     AutocompleteInteraction,
     MessageContextMenuCommandInteraction,
-    UserContextMenuCommandInteraction
+    UserContextMenuCommandInteraction,
+    ContextMenuCommandBuilder
 } from "discord.js";
 
 export interface ButtonOptions {
@@ -28,11 +29,11 @@ export interface AutocompleteOptions {
 }
 
 export interface MessageContextOptions {
-    name: string;
+    data: ContextMenuCommandBuilder;
     execute(interaction: MessageContextMenuCommandInteraction, args: string[]): Promise<any>;
 }
 
 export interface UserContextOptions {
-    name: string;
+    data: ContextMenuCommandBuilder;
     execute(interaction: UserContextMenuCommandInteraction, args: string[]): Promise<any>;
 }

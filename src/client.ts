@@ -101,6 +101,8 @@ class HerionClient {
             this.log.info(`Loaded ${this.client.clientEvents.size} client events`);
             this.log.info(`Loaded ${this.client.guildEvents.size} guild events`);
             this.log.info(`Loaded ${this.client.buttons.size} buttons`);
+            this.log.info(`Loaded ${this.client.messageContexts.size} Message Context Buttons`);
+            this.log.info(`Loaded ${this.client.userContexts.size} User Context Buttons`);
             this.log.info(`Loaded ${this.client.modals.size} modals`);
             this.log.info(`Loaded ${this.client.selectMenus.size} select menus`);
             this.log.info(`Loaded ${this.client.autoCompletes.size} autocompletes`);
@@ -110,40 +112,74 @@ class HerionClient {
                 // gets both normal slash commands and developer slash commands
                 const commands = Array.from(this.client.slashCommands.values()).map(cmd => cmd.data.toJSON());
                 const devCommands = Array.from(this.client.devSlashCommands.values()).map(cmd => cmd.data.toJSON());
+                
+                // get context menu commands
+                const messageContexts = Array.from(this.client.messageContexts.values()).map(ctx => ctx.data.toJSON());
+                const userContexts = Array.from(this.client.userContexts.values()).map(ctx => ctx.data.toJSON());
+                
+                // combine all application commands
+                const allCommands = [...commands, ...messageContexts, ...userContexts];
+                const allDevCommands = [...devCommands, ...messageContexts, ...userContexts];
+                
                 const devGuildId = this.client.config.get("devGuildId") as string | undefined;
-                // if there aren't ANY slash commands don't do anything
-                if (commands.length === 0 && devCommands.length === 0) {
-                    this.log.debug('No slash commands to register.');
+                
+                // if there aren't ANY commands don't do anything
+                if (allCommands.length === 0 && allDevCommands.length === 0) {
+                    this.log.debug('No application commands to register.');
                     return;
                 }
-                // if the node environment is set to development register the developer commands to the development guild
+
+                // Register dev commands to dev guild if in development mode
                 if ((this.client.config.get('environment') as string) === 'development') {
-                    // if the devGuildId is not set don't do anything
-                    if (!devGuildId) {
-                        this.log.debug('No devGuildId set in config; cannot register dev commands.');
-                        return;
-                    }
-                    this.log.info(`Registering slash commands in the dev guild (${devGuildId})`);
-                    try {
-                        // find the developer guild and try to set the slash commands there 
-                        // (if the guild doesn't exist or isn't cached or the bot isn't in the guild then panic)
-                        const guild = await this.client.guilds.fetch(devGuildId);
-                        await guild.commands.set(devCommands);
-                        this.log.info(`Registered ${devCommands.length} slash commands to guild ${devGuildId}`);
-                    } catch (err) {
-                        this.log.error(`Failed to register commands to dev guild ${devGuildId}:`, err);
+                    if (devGuildId && allDevCommands.length > 0) {
+                        this.log.info(`Registering ${allDevCommands.length} commands to dev guild (${devGuildId})`);
+                        this.log.debug(`Commands: ${commands.length} slash, ${devCommands.length} dev slash, ${messageContexts.length} message context, ${userContexts.length} user context`);
+                        try {
+                            const guild = await this.client.guilds.fetch(devGuildId);
+                            await guild.commands.set(allDevCommands);
+                            this.log.info(`Registered ${allDevCommands.length} application commands to dev guild ${devGuildId}`);
+                        } catch (err) {
+                            this.log.error(`Failed to register commands to dev guild ${devGuildId}:`, err);
+                        }
+                    } else if (!devGuildId) {
+                        this.log.info('No devGuildId set in config; registering all commands globally instead.');
+                        // Fallback to global registration in development if no dev guild is set
+                        if (allCommands.length > 0) {
+                            try {
+                                await this.client.application?.commands.set(allCommands);
+                                this.log.info(`Registered ${allCommands.length} application commands globally (fallback)`);
+                            } catch (err) {
+                                this.log.error("Error registering global application commands:", err);
+                            }
+                        }
                     }
                 } else {
-                    this.log.info(`Registering slash commands globally...`);
-                    try {
-                        await this.client.application?.commands.set(commands);
-                        this.log.info(`Registered ${commands.length} slash commands globally`);
-                    } catch (err) {
-                        this.log.error("Error registering global slash commands:", err);
+                    // Production mode: Register regular commands globally, dev commands to dev guild
+                    if (allCommands.length > 0) {
+                        this.log.info(`Registering ${allCommands.length} commands globally...`);
+                        this.log.debug(`Commands: ${commands.length} slash, ${messageContexts.length} message context, ${userContexts.length} user context`);
+                        try {
+                            await this.client.application?.commands.set(allCommands);
+                            this.log.info(`Registered ${allCommands.length} application commands globally`);
+                        } catch (err) {
+                            this.log.error("Error registering global application commands:", err);
+                        }
+                    }
+                    
+                    // Also register dev commands to dev guild in production if needed
+                    if (devGuildId && devCommands.length > 0) {
+                        this.log.info(`Registering ${devCommands.length} dev commands to dev guild (${devGuildId})`);
+                        try {
+                            const guild = await this.client.guilds.fetch(devGuildId);
+                            await guild.commands.set(devCommands);
+                            this.log.info(`Registered ${devCommands.length} dev commands to dev guild ${devGuildId}`);
+                        } catch (err) {
+                            this.log.error(`Failed to register dev commands to dev guild ${devGuildId}:`, err);
+                        }
                     }
                 }
             } catch (err) {
-                this.log.error("Error registering slash commands:", err);
+                this.log.error("Error registering application commands:", err);
             }
         } catch (error) {
             this.log.error("Error loading files:", error);

@@ -51,7 +51,7 @@ export async function loadFiles(directory: string, loadType: LoadAbles, client: 
                         client.on(module.name, (...args) => module.execute(...args, client))
                         log.debug(`[GuildEvent] Loaded: ${module.name}`)
                     }
-                    break
+                    break;
                 case LoadAbles.ClientEvents:
                     if (module.name && typeof module.execute === "function") {
                         if (module.once) {
@@ -62,7 +62,7 @@ export async function loadFiles(directory: string, loadType: LoadAbles, client: 
                         client.clientEvents.set(module.name, module);
                         log.debug(`[ClientEvent] Loaded: ${module.name}`);
                     }
-                    break
+                    break;
                 case LoadAbles.MessageCommands:
                     if (module.prototype?.execute && module.prototype?.constructor) {
                         const command = new module();
@@ -92,43 +92,43 @@ export async function loadFiles(directory: string, loadType: LoadAbles, client: 
                             log.error(`[SlashCommand] Failed to load ${file}:`, error);
                         }
                     }
-                    break
+                    break;
                 case LoadAbles.Buttons:
                     if (module.customId && typeof module.execute === "function") {
                         client.buttons.set(module.customId, module)
                         log.debug(`[Button] Loaded: ${module.customId}`)
                     }
-                    break
+                    break;
                 case LoadAbles.Modals:
                     if (module.customId && typeof module.execute === "function") {
                         client.modals.set(module.customId, module)
                         log.debug(`[Modal] Loaded: ${module.customId}`)
                     }
-                    break
+                    break;
                 case LoadAbles.MessageInteractions:
-                    if (module.name && typeof module.execute === "function") {
-                        client.messageContexts.set(module.name, module)
-                        log.debug(`[MessageInteraction] Loaded: ${module.name}`)
+                    if (module.data.name && typeof module.execute === "function") {
+                        client.messageContexts.set(module.data.name, module)
+                        log.debug(`[MessageInteraction] Loaded: ${module.data.name}`)
                     }
-                    break
+                    break;
                 case LoadAbles.UserInteractions:
-                    if (module.name && typeof module.execute === "function") {
-                        client.userContexts.set(module.name, module)
-                        log.debug(`[UserInteraction] Loaded: ${module.name}`)
+                    if (module.data.name && typeof module.execute === "function") {
+                        client.userContexts.set(module.data.name, module)
+                        log.debug(`[UserInteraction] Loaded: ${module.data.name}`)
                     }
-                    break
+                    break;
                 case LoadAbles.AutoCompletes:
                     if (module.commandName && typeof module.execute === "function") {
                         client.autoCompletes.set(module.commandName, module)
                         log.debug(`[AutoComplete] Loaded: ${module.commandName}`)
                     }
-                    break
+                    break;
                 case LoadAbles.SelectMenus:
                     if (module.customId && typeof module.execute === "function") {
                         client.selectMenus.set(module.customId, module)
                         log.debug(`[SelectMenu] Loaded: ${module.customId}`)
                     }
-                    break
+                    break;
                 case LoadAbles.MessageTriggers:
                     if (Array.isArray(module.key) && typeof module.execute === "function") {
                         for (const trigger of module.key) {
@@ -138,7 +138,7 @@ export async function loadFiles(directory: string, loadType: LoadAbles, client: 
                             }
                         }
                     }
-                    break
+                    break;
                 default:
                     log.debug(`[Unknown] Skipped: ${file}`)
             }
