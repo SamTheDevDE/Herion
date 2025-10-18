@@ -38,7 +38,7 @@ export class Paginator {
         this.collector?.on('collect', async (i: any) => {
             if (!i.isButton() && !i.isStringSelectMenu()) return;
             if (i.user.id !== this.message.author.id) {
-                await i.reply({ content: "You can't control this paginator!", ephemeral: true });
+                await i.reply({ content: "You can't control this paginator!", flags: MessageFlags.Ephemeral });
                 return;
             }
             if (i.isButton()) {

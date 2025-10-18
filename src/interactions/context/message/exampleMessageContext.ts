@@ -1,4 +1,4 @@
-import { ContextMenuCommandBuilder, MessageContextMenuCommandInteraction, ApplicationCommandType } from 'discord.js';
+import { ContextMenuCommandBuilder, MessageContextMenuCommandInteraction, ApplicationCommandType, MessageFlags } from 'discord.js';
 import { MessageContextOptions } from "../../../types/interaction";
 
 const handler: MessageContextOptions = {
@@ -6,7 +6,7 @@ const handler: MessageContextOptions = {
     .setName("Example Message Context")
     .setType(ApplicationCommandType.Message),
   async execute(interaction: MessageContextMenuCommandInteraction, args: string[]) {
-    await interaction.reply({ content: `Message context menu used! Args: ${args.join(", ")}`, ephemeral: true });
+    await interaction.reply({ content: `Message context menu used! Args: ${args.join(", ")}`, flags: MessageFlags.Ephemeral });
   }
 };
 

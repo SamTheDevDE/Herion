@@ -1,4 +1,4 @@
-import { Events, Interaction, ChatInputCommandInteraction } from "discord.js"
+import { Events, Interaction, ChatInputCommandInteraction, MessageFlags } from "discord.js"
 import { ExtendedClient } from "../../client"
 import Logger from "../../classes/Logger"
 
@@ -20,7 +20,7 @@ export default {
 
                 const ownerIds = client.config.get('ownerIds') as string[];
                 if (command.ownerOnly && !ownerIds?.includes(interaction.user.id)) {
-                    return interaction.reply({ content: 'This command can only be used by the bot owner!', ephemeral: true });
+                    return interaction.reply({ content: 'This command can only be used by the bot owner!', flags: MessageFlags.Ephemeral });
                 }
                 await command.execute({ interaction: chat, client });
                 return;
@@ -83,9 +83,9 @@ export default {
             try {
                 if (interaction.isRepliable()) {
                     if (interaction.replied || interaction.deferred) {
-                        await interaction.followUp({ content: 'There was an error handling this interaction.', ephemeral: true });
+                        await interaction.followUp({ content: 'There was an error handling this interaction.', flags: MessageFlags.Ephemeral });
                     } else {
-                        await interaction.reply({ content: 'There was an error handling this interaction.', flags: 64 });
+                        await interaction.reply({ content: 'There was an error handling this interaction.', flags: MessageFlags.Ephemeral });
                     }
                 }
             } catch { /* not yet */ }

@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, MessageFlags, SlashCommandBuilder } from 'discord.js';
 import { ExtendedSlashCommandBuilder, SlashCommand } from "../../../structures/SlashCommand";
 import { SlashCommandExecuteOptions } from "../../../types/command";
 
@@ -32,15 +32,15 @@ export default class PingSlashCommand extends SlashCommand {
         const channel = interaction.guild?.channels.cache.get(channelId);
         
         if (!channel?.isTextBased()) {
-            await interaction.reply({ content: "Invalid channel selected!", ephemeral: true });
+            await interaction.reply({ content: "Invalid channel selected!", flags: MessageFlags.Ephemeral });
             return;
         }
 
         try {
             await channel.send({ content });
-            await interaction.reply({ content: `Message sent to ${channel}!`, ephemeral: true });
+            await interaction.reply({ content: `Message sent to ${channel}!`, flags: MessageFlags.Ephemeral });
         } catch (error) {
-            await interaction.reply({ content: "Failed to send message!", ephemeral: true });
+            await interaction.reply({ content: "Failed to send message!", flags: MessageFlags.Ephemeral });
         }
     }
 }
