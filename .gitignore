@@ -1,10 +1,11 @@
 node_modules/
 package-lock.json
-bun.lock
 *.sql
+bun.lock
 migration_lock.toml
 .vscode/
 .turbo/
+prisma/migrations/
 
 # Remove sensitive
 .env
