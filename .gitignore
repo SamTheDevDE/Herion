@@ -10,3 +10,4 @@ prisma/migrations/
 # Remove sensitive
 .env
 config.ts
+/src/generated/prisma
