@@ -1,7 +1,7 @@
 export interface BotConfig {
     token: string;
     prefix: string;
-    ownerId: string;
+    ownerIds: string[];
     clientId: string;
     devGuildId?: string;
     environment: "development" | "production";
@@ -22,9 +22,16 @@ declare global {
     namespace NodeJS {
         interface ProcessEnv {
             BOT_TOKEN: string;
+            CLIENT_ID: string;
+            GUILD_ID: string;
+            OWNER_ID: string;
+            PREFIX: string;
             DEBUG: boolean;
             DATABASE_URL: string;
             NODE_ENV: "development" | "production";
+            LOG_ERROR_WEBHOOK: string;
+            LOG_INFO_WEBHOOK: string;
+            LOG_DEBUG_WEBHOOK: string;
         }
     }
 }

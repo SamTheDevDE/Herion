@@ -1,11 +1,13 @@
-import { PrismaPg } from '@prisma/adapter-pg';
-import { PrismaClient } from '@prisma/client';
-import Logger from './Logger';
+import { db } from "../db";
+import type { NodePgDatabase } from "drizzle-orm/node-postgres";
+import * as schema from "../db/schema";
+import Logger from "./Logger";
+
+type DbClient = NodePgDatabase<typeof schema>;
 
 class Database {
-    private static _instance: PrismaClient | null = null;
+    private static _instance: DbClient | null = null;
     private _log: Logger;
-    private _adapter: any;
 
     public constructor(logger: Logger) {
         this._log = logger;
@@ -13,23 +15,18 @@ class Database {
     }
 
     initialize() {
-        // checks if there is already an instance of "database" if not make one
         if (!Database._instance) {
             try {
-                this._adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-                Database._instance = new PrismaClient({ adapter: this._adapter });
-                Database._instance.$connect()
-                    .then(() => this._log.info('Prisma client connected successfully.'))
-                    .catch((err: any) => this._log.error('Error connecting to Prisma client:', err));
+                Database._instance = db;
+                this._log.info("Drizzle client initialized successfully.");
             } catch (error) {
-                this._log.error('Failed to initialize Prisma client:', error);
+                this._log.error("Failed to initialize Drizzle client:", error);
                 throw error;
             }
         }
     }
 
-    getClient() {
-        // returns the database client
+    getClient(): DbClient | null {
         return Database._instance;
     }
 }

@@ -1,37 +1,70 @@
 import { Events, Guild } from "discord.js";
 import { ExtendedClient } from "../../client";
 import Logger from "../../classes/Logger";
-import Database from "../../classes/Database";
+import { db } from "../../db";
+import { users, guilds, guildMembers } from "../../db/schema";
+import { eq, inArray } from "drizzle-orm";
 
 export default {
     name: Events.GuildCreate,
     once: false,
-    async execute(guild: Guild, client: ExtendedClient) {
+    async execute(guild: Guild, _client: ExtendedClient) {
         const logger = Logger.getInstance();
-        const database = new Database(logger);
-        const db = database.getClient();
-        const members = await guild.members.fetch();
-        const memberIds = members.map(m => m.id);
-        const dbUsers = await db?.user.findMany({
-            where: { id: { in: memberIds } }
-        });
-        const memberConnect = dbUsers?.map(u => ({ id: u.id })) ?? [];
-        const guildInDatabase = await db?.guilds.findUnique({
-            where: { id: guild.id }
-        });
 
-        if (!guildInDatabase) {
-            await db?.guilds.create({
-                data: {
+        try {
+            const members = await guild.members.fetch();
+            const memberIds = members.map(m => m.id);
+
+            // Find existing users in DB
+            const dbUsers = await db
+                .select({ id: users.id })
+                .from(users)
+                .where(inArray(users.id, memberIds));
+
+            const existingUserIds = new Set(dbUsers.map(u => u.id));
+
+            // Insert users that don't exist yet
+            const newUsers = memberIds
+                .filter(id => !existingUserIds.has(id))
+                .map(id => ({
+                    id,
+                    username: members.get(id)?.user.username || "Unknown",
+                }));
+
+            if (newUsers.length > 0) {
+                await db.insert(users).values(newUsers).catch(() => {});
+            }
+
+            // Check if guild already in DB
+            const [guildInDb] = await db
+                .select({ id: guilds.id })
+                .from(guilds)
+                .where(eq(guilds.id, guild.id))
+                .limit(1);
+
+            if (!guildInDb) {
+                // Insert guild
+                await db.insert(guilds).values({
                     id: guild.id,
                     name: guild.name,
                     ownerId: guild.ownerId,
-                    member: { connect: memberConnect }
+                }).catch((err) => logger.error(`Error creating guild ${guild.name}(${guild.id}):\n`, err));
+
+                // Insert guild members
+                const memberConnections = memberIds.map(userId => ({
+                    guildId: guild.id,
+                    userId,
+                }));
+
+                if (memberConnections.length > 0) {
+                    await db.insert(guildMembers).values(memberConnections).catch(() => {});
                 }
-            }).catch(
-                (err) => logger.error(`an error occurred creating the guild ${guild.name}(${guild.id}) in the database\n`, err)
-            );
-            logger.debug(`Successfully created the guild ${guild.name}(${guild.id}) in the database`);
+
+                logger.debug(`Successfully created guild ${guild.name}(${guild.id}) in the database`);
+            }
+        } catch (err) {
+            logger.error(`Error during guild create for ${guild.name}(${guild.id}):`, err);
         }
     }
-}
+};
+

@@ -6,19 +6,16 @@
   "scripts": {
     "start": "bun src/startup",
     "dev": "bun --watch src/startup",
-    "dev:all": "turbo run dev prisma:s",
+    "dev:all": "turbo run dev drizzle:studio",
     "start:all": "turbo run start",
-    "prisma": "prisma",
-    "p": "prisma",
-    "prisma:generate": "prisma generate",
-    "prisma:migrate": "bun src/helpers/generateMigration.ts",
-    "prisma:studio": "prisma studio",
-    "prisma:format": "prisma format",
-    "prisma:g": "prisma generate",
-    "prisma:m": "bun src/helpers/generateMigration.ts",
-    "prisma:s": "prisma studio",
-    "prisma:f": "prisma format",
-    "prisma:tour": "npm run prisma:format && npm run prisma:migrate"
+    "drizzle:generate": "drizzle-kit generate",
+    "drizzle:migrate": "drizzle-kit migrate",
+    "drizzle:studio": "drizzle-kit studio",
+    "drizzle:push": "drizzle-kit push",
+    "drizzle:g": "drizzle-kit generate",
+    "drizzle:m": "drizzle-kit migrate",
+    "drizzle:s": "drizzle-kit studio",
+    "drizzle:tour": "npm run drizzle:generate && npm run drizzle:migrate"
   },
   "repository": {
     "type": "git",
@@ -40,8 +37,6 @@
   },
   "homepage": "https://github.com/SamTheDevDE/Herion#readme",
   "dependencies": {
-    "@prisma/adapter-pg": "^7.8.0",
-    "@prisma/client": "^7.8.0",
     "@types/dateformat": "^5.0.3",
     "@types/node": "^25.6.0",
     "colors": "^1.4.0",
@@ -49,11 +44,12 @@
     "dateformat": "^5.0.3",
     "discord.js": "^14.26.3",
     "dotenv": "^17.4.2",
+    "drizzle-orm": "^0.45.2",
     "pg": "^8.20.0",
     "typescript": "^6.0.3"
   },
   "devDependencies": {
     "@types/pg": "^8.20.0",
-    "prisma": "^7.8.0"
+    "drizzle-kit": "^0.31.10"
   }
 }

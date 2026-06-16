@@ -69,7 +69,7 @@ export class SlashCommand implements SlashCommandStructure{
         this.data = data;
     }
 
-    async execute(options: SlashCommandExecuteOptions): Promise<any> {
+    async execute(_options: SlashCommandExecuteOptions): Promise<any> {
         throw new Error('Method not implemented.');
     }
 }

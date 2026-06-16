@@ -3,7 +3,7 @@ import { ButtonOptions } from "../../types/interaction";
 
 const handler: ButtonOptions = {
   customId: "ping_refresh_btn",
-  async execute(interaction: ButtonInteraction, args: string[]) {
+  async execute(interaction: ButtonInteraction, _args: string[]) {
 
     // Step 1: Edit the message to 'Pinging...' using componentsV2
     const start = Date.now();

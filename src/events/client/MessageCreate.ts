@@ -2,15 +2,15 @@ import { ChannelType, Collection, Events, Message } from "discord.js";
 import config from "../../config";
 import { ExtendedClient } from "../../client";
 import Logger from "../../classes/Logger";
-import Database from "../../classes/Database";
+import { db } from "../../db";
+import { users } from "../../db/schema";
+import { eq } from "drizzle-orm";
 
 const log = Logger.getInstance();
 
 export default {
     name: Events.MessageCreate,
     async execute(message: Message, client: ExtendedClient) {
-        const database = new Database(log);
-        const db = database.getClient();
         // Ignore messages from bots
         if (message.author.bot) return;
 
@@ -21,31 +21,28 @@ export default {
         const args = message.content.slice(config.prefix.length).trim().split(/ +/);
         const commandName = args.shift()?.toLowerCase();
         if (!commandName) return;
-        // searches for the user in the database and returns the vars: "isBlacklisted" and "roles"
-        const user = await db?.user.findUnique({
-            where: {
-                id: message.author.id
-            },
-            select: {
-                isBlacklisted: true,
-                roles: true
-            }
-        })
 
-        // create user in the database if not found
+        // Find the user in the database
+        const [user] = await db
+            .select({ isBlacklisted: users.isBlacklisted, roles: users.roles })
+            .from(users)
+            .where(eq(users.id, message.author.id))
+            .limit(1);
+
+        // Create user in the database if not found
         if (!user) {
-            await db?.user.create({
-                data: {
-                    id: message.author.id,
-                    username: message.author.username
-                }
-            });
+            await db.insert(users).values({
+                id: message.author.id,
+                username: message.author.username,
+            }).catch(() => {});
         }
+
         // Find the command by name
         const command = client.messageCommands.get(commandName);
         if (!command) return;
+
         // Owner only check
-        if (command.ownerOnly && !(config.ownerId.includes(message.author.id) || user?.roles.includes("DEVELOPER"))) {
+        if (command.ownerOnly && !((config.ownerIds as string[]).includes(message.author.id) || user?.roles.includes("DEVELOPER"))) {
             return message.reply({ content: "You do not have permission to use this command." });
         }
 
@@ -68,7 +65,7 @@ export default {
 
         // User blacklist check
         if (user?.isBlacklisted) {
-            return message.reply({ content: "You are blacklisted from the bot.", allowedMentions: { repliedUser: false }})
+            return message.reply({ content: "You are blacklisted from the bot.", allowedMentions: { repliedUser: false } });
         }
 
         // Cooldown handling
@@ -104,14 +101,12 @@ export default {
         // Permission checks
         if (command.permissions && message.channel.type !== ChannelType.DM) {
             if ("permissionsFor" in message.channel && typeof message.channel.permissionsFor === "function") {
-                // User permissions
                 if (command.permissions.user && command.permissions.user.length > 0) {
                     const authorPerms = message.channel.permissionsFor(message.author);
                     if (!authorPerms || !authorPerms.has(command.permissions.user)) {
                         return message.reply({ content: "You do not have permission to use this command!" });
                     }
                 }
-                // Bot permissions
                 if (command.permissions.bot && command.permissions.bot.length > 0) {
                     const botMember = message.guild?.members.me;
                     if (!botMember) {
@@ -129,14 +124,11 @@ export default {
 
         // Execute the command
         try {
-            await command.execute({
-                message,
-                args,
-                client
-            });
+            await command.execute({ message, args, client });
         } catch (error) {
             log.error(error as string);
             message.reply('There was an error executing that command!');
         }
+        return;
     }
 };

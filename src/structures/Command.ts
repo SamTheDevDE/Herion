@@ -50,7 +50,7 @@ export class Command implements CommandStructure {
             : undefined;
     }
 
-    async execute(options: CommandExecuteOptions): Promise<any> {
+    async execute(_options: CommandExecuteOptions): Promise<any> {
         throw new Error('Method not implemented.');
     }
 }

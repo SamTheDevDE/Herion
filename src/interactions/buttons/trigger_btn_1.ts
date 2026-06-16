@@ -3,7 +3,7 @@ import { ButtonOptions } from "../../types/interaction";
 
 const handler: ButtonOptions = {
   customId: "trigger_btn_1",
-  async execute(interaction: ButtonInteraction, args: string[]) {
+  async execute(interaction: ButtonInteraction, _args: string[]) {
     const member = interaction.guild?.members.cache.get(interaction.user.id);
     if (!member) {
       await interaction.reply({ content: `Could not find member.` });

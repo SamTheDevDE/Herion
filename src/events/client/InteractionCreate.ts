@@ -18,8 +18,7 @@ export default {
                 const command = devCommand ?? Command;
                 if (!command) return;
 
-                const ownerIds = client.config.get('ownerIds') as string[];
-                if (command.ownerOnly && !ownerIds?.includes(interaction.user.id)) {
+                if (command.ownerOnly && !(client.config.get('ownerIds') as string[])?.includes(interaction.user.id)) {
                     return interaction.reply({ content: 'This command can only be used by the bot owner!', flags: MessageFlags.Ephemeral });
                 }
                 await command.execute({ interaction: chat, client });
@@ -90,5 +89,6 @@ export default {
                 }
             } catch { /* not yet */ }
         }
+        return;
     }
 };

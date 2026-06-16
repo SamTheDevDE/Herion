@@ -7,7 +7,7 @@
         "outputs": [],
         "persistent": true
     },
-    "prisma:s": {
+    "drizzle:studio": {
         "cache": false,
         "outputs": [],
         "persistent": true
